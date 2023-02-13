@@ -1,0 +1,8 @@
+02/13/2023 10:26:13 +05:30[Information] - Message: CreateBatch - ["\u0027Business Unit\u0027 must not be empty."]
+02/13/2023 10:26:13 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty."]
+02/13/2023 10:33:40 +05:30[Information] - Message: Batch details not found using provided batchId: 171c3757-5b4c-4678-9f0e-aa0258325621
+02/13/2023 10:33:40 +05:30[Error] - Message: Wrong Batch Id, No data found!
+02/13/2023 12:21:03 +05:30[Information] - Message: CreateBatch - ["\u0027Business Unit\u0027 must not be empty."]
+02/13/2023 12:21:13 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty."]
+02/13/2023 12:22:09 +05:30[Information] - Message: Batch details not found using provided batchId: d6163e27-ee7f-4cc6-b514-553d9e3be631
+02/13/2023 12:22:09 +05:30[Error] - Message: Wrong Batch Id, No data found!

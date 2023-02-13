@@ -1,0 +1,94 @@
+02/12/2023 10:29:12 +05:30[Error] - Message: Exception from middleware
+System.Exception: Exception from middleware
+   at batch_webapi.Controllers.BatchController.GetBatchByBatchId(Guid batchId) in D:\UKHO\batch-webapi\Controllers\BatchController.cs:line 51
+   at lambda_method2(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\UKHO\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 27
+02/12/2023 10:33:27 +05:30[Error] - Message: Exception from middleware
+System.Exception: Exception from middleware
+   at batch_webapi.Controllers.BatchController.GetBatchByBatchId(Guid batchId) in D:\UKHO\batch-webapi\Controllers\BatchController.cs:line 51
+   at lambda_method2(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\UKHO\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 27
+02/12/2023 10:48:45 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 10:53:37 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89527
+02/12/2023 11:00:54 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 11:02:19 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 11:13:28 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 11:14:26 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 11:16:42 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89525
+02/12/2023 11:48:47 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 12:33:15 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89527
+02/12/2023 14:06:24 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89524
+02/12/2023 14:07:07 +05:30[Error] - Message: Exception of type 'batch_webapi.Exceptions.StatusCodeException' was thrown.
+batch_webapi.Exceptions.StatusCodeException: Exception of type 'batch_webapi.Exceptions.StatusCodeException' was thrown.
+   at batch_webapi.Controllers.BatchController.GetBatchByBatchId(Guid batchId) in D:\UKHO\batch-webapi\Controllers\BatchController.cs:line 64
+   at lambda_method2(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\UKHO\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 29
+02/12/2023 14:12:41 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89527
+02/12/2023 14:36:09 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89527
+02/12/2023 14:36:33 +05:30[Error] - Message: Invalid Batch Id
+02/12/2023 14:40:14 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 14:40:15 +05:30[Error] - Message: Invalid Batch Id, No data found!
+02/12/2023 14:43:48 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c86528
+02/12/2023 14:44:15 +05:30[Error] - Message: Invalid Batch Id, No data found!
+02/12/2023 14:44:32 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c86528
+02/12/2023 14:44:32 +05:30[Error] - Message: Invalid Batch Id, No data found!
+02/12/2023 15:05:53 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/12/2023 15:05:53 +05:30[Error] - Message: Wrong Batch Id, No data found!
+02/12/2023 15:06:18 +05:30[Information] - Message: Invalid Model State: ["[BusinessUnit, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]"]
+02/12/2023 15:07:33 +05:30[Error] - Message: Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary
+02/12/2023 15:15:12 +05:30[Information] - Message: Invalid Model State: ["[BusinessUnit, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]", "[Attributes.Key, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]"]
+02/12/2023 15:46:42 +05:30[Information] - Message: Invalid Model State: ["[BusinessUnit, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]"]
+02/12/2023 15:46:45 +05:30[Error] - Message: 
+02/12/2023 15:53:31 +05:30[Information] - Message: Invalid Model State: ["[BusinessUnit, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]"]
+02/12/2023 15:55:09 +05:30[Error] - Message: 
+02/12/2023 16:50:05 +05:30[Information] - Message: Invalid Model State: ["[BusinessUnit, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]", "[Attributes.Key, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]"]
+02/12/2023 16:52:32 +05:30[Information] - Message: Invalid Model State: ["[BusinessUnit, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]"]
+02/12/2023 16:52:37 +05:30[Error] - Message: System.Linq.Enumerable+SelectManySingleSelectorIterator`2[System.Collections.Generic.KeyValuePair`2[System.String,Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateEntry],Microsoft.AspNetCore.Mvc.ModelBinding.ModelError]
+02/12/2023 16:59:04 +05:30[Information] - Message: Invalid Model State: ["[BusinessUnit, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]", "[Attributes.Key, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary+ModelStateNode]"]
+02/12/2023 17:04:54 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty.","\u0027Value\u0027 must not be empty."]
+02/12/2023 17:17:49 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty.","\u0027Key\u0027 must not be empty."]
+02/12/2023 17:21:16 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89524
+02/12/2023 17:21:16 +05:30[Error] - Message: Wrong Batch Id, No data found!
+02/12/2023 17:22:05 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty."]
+02/12/2023 17:25:20 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty."]
+02/12/2023 17:28:56 +05:30[Information] - Message: CreateBatch - ["\u0027Business Unit\u0027 must not be empty."]
+02/12/2023 17:28:56 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty."]

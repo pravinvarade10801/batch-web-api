@@ -1,0 +1,4 @@
+02/10/2023 18:02:40 +05:30[Information] - Message: Batch details not found using provided batchId: {batchId}
+02/10/2023 18:04:16 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89526
+02/10/2023 18:08:42 +05:30[Information] - Message: Batch details not found using provided batchId: 61ee6631-c7c5-40b3-b8df-6345a1c89527
+02/10/2023 18:17:10 +05:30[Information] - Message: This is an exception thrown from middleware
