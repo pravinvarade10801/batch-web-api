@@ -14,6 +14,14 @@ using batch_webapi.Data.ViewModels;
 using batch_webapi.Exceptions;
 using batch_webapi.Data.Models;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using FakeItEasy;
+using Azure;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace batch_webapi_tests
 {
@@ -23,59 +31,41 @@ namespace batch_webapi_tests
           .UseInMemoryDatabase(databaseName: "BatchDbControllerTest")
           .Options;
 
-        AppDbContext context;
-        BatchService batchService;
-        BatchController batchController;
-
+        AppDbContext _context;              
+        
 
         [OneTimeSetUp]
         public void Setup()
         {
-            context = new AppDbContext(dbContextOptions);
-            context.Database.EnsureCreated();
+            _context = new AppDbContext(dbContextOptions);
+            _context.Database.EnsureCreated();
 
-            SeedDatabase();
-
-            batchService = new BatchService(context, null);
-            batchController = new BatchController(batchService, new NullLogger<BatchController>());
+            SeedDatabase();          
+            
         }
 
         [Test, Order(1)]
-        public void HTTPPOST_CreateBatch_ReturnsCreated_Test()
+        public void HTTPPOST_CreateBatch_ReturnsCreatedAtActionResult_Test()
         {
-            var newBatch = new BatchVM()
-            {
-                BusinessUnit = "UKHO",
-                ACL = new ACLVM
-                {
-                    ReadUsers = new List<string>
-                    {
-                        "User 1","User 2"
-                    },
-                    ReadGroups = new List<string>
-                    {
-                        "G1","G2"
-                    }
+            IConfiguration _config = A.Fake<IConfiguration>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            BatchService _batchService = new BatchService(_context, _config);
+            BatchController _batchController = new BatchController(_batchService, _logger);
 
-                },
-
-                Attributes = new AttributesVM()
-                {
-                    Key = "Code",
-                    Value = "ABC"
-                },
-                ExpiryDate = DateTime.Now.AddDays(1)
-
-            };
-
-            IActionResult actionResult = batchController.CreateBatch(newBatch);
+            IActionResult actionResult = _batchController.CreateBatch(AssignBatch());
 
             Assert.That(actionResult, Is.TypeOf<CreatedAtActionResult>());
+
         }
 
         [Test, Order(2)]
         public void HTTPPOST_CreateBatch_ReturnsBadRequest_Test()
         {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            BatchService _batchService = new BatchService(_context, _config);
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
             var newBatch = new BatchVM()
             {
                 BusinessUnit = "",
@@ -100,29 +90,91 @@ namespace batch_webapi_tests
                 ExpiryDate = DateTime.Now.AddDays(1)
 
             };
+            _batchController.ModelState.AddModelError("BusinessUnit", "mock error message");
 
-            Assert.Throws<HttpStatusCodeException>(() => batchController.CreateBatch(newBatch));
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.CreateBatch(newBatch))
+                .StatusCode.Equals(HttpStatusCode.BadRequest);
 
         }
 
+
         [Test, Order(3)]
+        public void HTTPGET_GetBatchByBatchId_ReturnsBadRequest_HttpStatusCodeException_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            BatchService _batchService = new BatchService(_context, _config);
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
+            
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.GetBatchByBatchId(batchId)).StatusCode.Equals(HttpStatusCode.NotFound);
+        }
+        [Test, Order(4)]
+        public void HTTPGET_GetBatchByBatchId_ReturnsNotFound_HttpStatusCodeException_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            BatchService _batchService = new BatchService(_context, _config);
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
+
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.GetBatchByBatchId(batchId)).StatusCode.Equals(HttpStatusCode.BadRequest);
+        }
+
+        [Test, Order(5)]
         public void HTTPGET_GetBatchByBatchId_ReturnsOk_Test()
         {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            BatchService _batchService = new BatchService(_context, _config);
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
             Guid batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
 
-            IActionResult actionResult = batchController.GetBatchByBatchId(batchId);
+            IActionResult actionResult = _batchController.GetBatchByBatchId(batchId);
 
             Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
 
             var batchDeatails = (actionResult as OkObjectResult).Value as BatchVMWithBatchDetails;
             Assert.That(batchDeatails.BusinessUnit, Is.EqualTo("UKHO"));
-            
+            Assert.That(batchDeatails.BatchId, Is.EqualTo(batchId));
+
         }
 
         [OneTimeTearDown]
         public void CleanUp()
         {
-            context.Database.EnsureDeleted();
+            _context.Database.EnsureDeleted();
+        }
+        private BatchVM AssignBatch()
+        {
+            var newBatch = new BatchVM()
+            {
+                BusinessUnit = "UKHO",
+                ACL = new ACLVM
+                {
+                    ReadUsers = new List<string>
+                    {
+                        "User 1","User 2"
+                    },
+                    ReadGroups = new List<string>
+                    {
+                        "G1","G2"
+                    }
+
+                },
+
+                Attributes = new AttributesVM()
+                {
+                    Key = "Code",
+                    Value = "ABC"
+                },
+                ExpiryDate = DateTime.Now.AddDays(1)
+
+            };
+            return newBatch;
         }
         private void SeedDatabase()
         {
@@ -132,26 +184,26 @@ namespace batch_webapi_tests
                 Key = "key",
                 Value = "value"
             };
-            context.Attributes.AddRange(Attributes);
+            _context.Attributes.AddRange(Attributes);
 
             var acl = new ACL()
             {
-                AclId=1
+                AclId = 1
             };
-            context.ACL.AddRange(acl);
+            _context.ACL.AddRange(acl);
             var readuser = new ReadUsers()
             {
                 UserName = "user",
                 AclId = 1
             };
-            context.ReadUsers.Add(readuser);
+            _context.ReadUsers.Add(readuser);
 
             var readgroup = new ReadGroups()
             {
                 GroupName = "group",
                 AclId = 1
             };
-            context.AddRange(readgroup);
+            _context.AddRange(readgroup);
 
             var batch = new Batch()
             {
@@ -161,8 +213,8 @@ namespace batch_webapi_tests
                 BatchPublishedDate = DateTime.Now.AddDays(-10),
                 AttributesId = 1
             };
-            context.Batch.AddRange(batch);
-            context.SaveChanges();
+            _context.Batch.AddRange(batch);
+            _context.SaveChanges();
         }
 
     }

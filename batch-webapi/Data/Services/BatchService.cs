@@ -21,6 +21,7 @@ namespace batch_webapi.Data.Services
     {
         private AppDbContext _context;
         private readonly IConfiguration _config;
+        
         public BatchService(AppDbContext context, IConfiguration config)
         {
             _context = context;
@@ -29,7 +30,8 @@ namespace batch_webapi.Data.Services
 
         public Guid CreateBatch(BatchVM batch, Guid batchId)
         {
-
+            var batchUpload = _config.GetValue<string>("BatchUpload");
+            //var batchUpload = "BatchUpload";
             var _batch = new Batch()
             {
                 BatchId = batchId,
@@ -73,8 +75,7 @@ namespace batch_webapi.Data.Services
             _context.SaveChanges();
 
             //Create Batch
-            //var batchUpload = _config.GetValue<string>("BatchUpload");
-            var batchUpload = "BatchUpload";
+            
             var pathToCreateBatch = Path.Combine(Directory.GetCurrentDirectory(), batchUpload);
             var filePath = Path.Combine(pathToCreateBatch, _batch.BatchId.ToString());
 
@@ -108,8 +109,8 @@ namespace batch_webapi.Data.Services
         public BatchVMWithBatchDetails GetBatch(Guid batchId)
         {
 
-            //var batchUpload = _config.GetValue<string>("BatchUpload");
-            var batchUpload = "BatchUpload";
+            var batchUpload = _config.GetValue<string>("BatchUpload");
+            //var batchUpload = "BatchUpload";
             var batchPath = Path.Combine(Directory.GetCurrentDirectory(), batchUpload, batchId.ToString());
 
             List<FilesVM> filesVMs = new List<FilesVM>();

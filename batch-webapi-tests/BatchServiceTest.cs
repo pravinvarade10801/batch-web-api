@@ -3,6 +3,7 @@ using batch_webapi.Data.Models;
 using batch_webapi.Data.Services;
 using batch_webapi.Data.ViewModels;
 using batch_webapi.Exceptions;
+using FakeItEasy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
@@ -21,25 +22,24 @@ namespace batch_webapi_tests
 
         AppDbContext context;
         BatchService batchService;
+        IConfiguration _config;
 
         [OneTimeSetUp]
         public void Setup()
         {
             context = new AppDbContext(dbContextOptions);
             context.Database.EnsureCreated();
+            _config = A.Fake<IConfiguration>();
 
             SeedDatabase();
-            batchService = new BatchService(context, null);
+            batchService = new BatchService(context, _config);
         }
        
 
         [Test, Order(1)]
         public void CreateBatch_WithoutException_Test()
         {
-            //var config = new ConfigurationBuilder().AddJsonFile("~/appsetting.test.json").Build();
-
-            //var batchUpload = Convert.ToString(config["BatchUpload"]);
-
+            
             var newBatch = new BatchVM()
             {                
                 BusinessUnit = "UKHO",

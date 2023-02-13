@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace batch_webapi.Data.Models
 {
     public class ACL
-    {
-        [Key]
+    {        
         public int AclId { get; set; }
         public List<ReadUsers> ReadUsers { get; set; }
         public List<ReadGroups> ReadGroups { get; set; }
