@@ -1,6 +1,7 @@
 ﻿using batch_webapi.Data.Services;
 using batch_webapi.Data.ViewModels;
 using batch_webapi.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace batch_webapi.Controllers
 {
+    /// <summary>
+    /// Batch Controller which include Get and Post batch endpoints
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class BatchController : ControllerBase
@@ -25,8 +29,16 @@ namespace batch_webapi.Controllers
             _batchService = batchService;
             _logger = logger;
         }
-
+        /// <summary>
+        /// CreateBatch api endpoint
+        /// </summary>
+        /// <param name="batch"></param>
+        /// <returns>Json - batchId</returns>
+        /// <exception cref="HttpStatusCodeException"></exception>
         [HttpPost("create-batch")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public IActionResult CreateBatch([FromBody] BatchVM batch)
         {
             
@@ -42,13 +54,24 @@ namespace batch_webapi.Controllers
             }
             var batchId = _batchService.CreateBatch(batch,Guid.NewGuid()).ToString();
 
-            return Created(nameof(CreateBatch), new { batchId = batchId });
-
+            return CreatedAtAction(nameof(CreateBatch), new { batchId = batchId });
 
         }
-        [HttpGet("get-batch-by-batchid/{batchId}")]
+
+        /// <summary>
+        /// get-batch-by-batchid api endpoint
+        /// </summary>
+        /// <param name="batchId"></param>
+        /// <returns>Batch details Json</returns>
+        /// <exception cref="HttpStatusCodeException"></exception>
+        [HttpGet("get-batch-by-batchid/{batchId}")]        
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetBatchByBatchId(Guid batchId)
         {
+            //throw new Exception("error from middleware");
             Guid guidOutput;
             bool isValid = Guid.TryParse(batchId.ToString(), out guidOutput);
             if (!isValid)

@@ -6,3 +6,23 @@
 02/13/2023 12:21:13 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty."]
 02/13/2023 12:22:09 +05:30[Information] - Message: Batch details not found using provided batchId: d6163e27-ee7f-4cc6-b514-553d9e3be631
 02/13/2023 12:22:09 +05:30[Error] - Message: Wrong Batch Id, No data found!
+02/13/2023 13:27:10 +05:30[Information] - Message: Batch details not found using provided batchId: 171c3757-5b4c-4678-9f0e-aa0258325621
+02/13/2023 13:27:10 +05:30[Error] - Message: Wrong Batch Id, No data found!
+02/13/2023 13:30:05 +05:30[Error] - Message: error from middleware
+System.Exception: error from middleware
+   at batch_webapi.Controllers.BatchController.GetBatchByBatchId(Guid batchId) in D:\Projects\UKHO\batch-webapi\batch-webapi\Controllers\BatchController.cs:line 52
+   at lambda_method2(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\UKHO\batch-webapi\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 30

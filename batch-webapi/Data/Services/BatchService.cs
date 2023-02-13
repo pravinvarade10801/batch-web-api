@@ -14,6 +14,9 @@ using System.Xml;
 
 namespace batch_webapi.Data.Services
 {
+    /// <summary>
+    /// Batch Service class which have post and get batch methods
+    /// </summary>
     public class BatchService
     {
         private AppDbContext _context;

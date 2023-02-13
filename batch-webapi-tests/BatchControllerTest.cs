@@ -70,7 +70,7 @@ namespace batch_webapi_tests
 
             IActionResult actionResult = batchController.CreateBatch(newBatch);
 
-            Assert.That(actionResult, Is.TypeOf<CreatedResult>());
+            Assert.That(actionResult, Is.TypeOf<CreatedAtActionResult>());
         }
 
         [Test, Order(2)]
