@@ -82,19 +82,19 @@ namespace batch_webapi.Data.Services
             Directory.CreateDirectory(filePath);
 
 
-            //Add json file in created batch
-            var fileName = _batch.BatchId.ToString() + ".txt";
-            var fileNamePath = Path.Combine(filePath, fileName);
-            using (StreamWriter file = File.CreateText(fileNamePath))
-            {
-                string data = JsonConvert.SerializeObject(_batch, Newtonsoft.Json.Formatting.None,
-                        new JsonSerializerSettings()
-                        {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                        });
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, data);
-            }
+            ////Add json file in created batch
+            //var fileName = _batch.BatchId.ToString() + ".txt";
+            //var fileNamePath = Path.Combine(filePath, fileName);
+            //using (StreamWriter file = File.CreateText(fileNamePath))
+            //{
+            //    string data = JsonConvert.SerializeObject(_batch, Newtonsoft.Json.Formatting.None,
+            //            new JsonSerializerSettings()
+            //            {
+            //                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            //            });
+            //    JsonSerializer serializer = new JsonSerializer();
+            //    serializer.Serialize(file, data);
+            //}
 
             return _batch.BatchId;
         }
