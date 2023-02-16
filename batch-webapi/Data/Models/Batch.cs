@@ -24,6 +24,7 @@ namespace batch_webapi.Data.Models
         public Attributes Attributes { get; set; }
         public DateTime ExpiryDate { get; set; }
         public DateTime BatchPublishedDate { get; set; }
+        public string Status { get; set; }
     }   
 
     

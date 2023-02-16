@@ -1,6 +1,9 @@
 ﻿
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using batch_webapi.Data.Models;
 using batch_webapi.Data.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -21,27 +24,31 @@ namespace batch_webapi.Data.Services
     {
         private AppDbContext _context;
         private readonly IConfiguration _config;
-        
-        public BatchService(AppDbContext context, IConfiguration config)
+        private readonly IContainerService _containerService;
+
+        public BatchService(AppDbContext context, IConfiguration config, IContainerService containerService)
         {
             _context = context;
             _config = config;
+            _containerService = containerService;
         }
 
         public Guid CreateBatch(BatchVM batch, Guid batchId)
-        {
-            var batchUpload = _config.GetValue<string>("BatchUpload");
-            //var batchUpload = "BatchUpload";
+        {            
             var _batch = new Batch()
             {
                 BatchId = batchId,
                 BusinessUnit = batch.BusinessUnit,
                 ExpiryDate = batch.ExpiryDate,
-                BatchPublishedDate = DateTime.Now
+                BatchPublishedDate = DateTime.Now,
+                Status = "InComplete"
             };
             //Instantiate ACL
 
-            _batch.ACL = new ACL();
+            _batch.ACL = new ACL()
+            {
+                AclName = "Batch ACL"
+            };
 
             //Add ReadUsers
             _batch.ACL.ReadUsers = new List<ReadUsers>();
@@ -74,73 +81,43 @@ namespace batch_webapi.Data.Services
             _context.Batch.Add(_batch);
             _context.SaveChanges();
 
-            //Create Batch
-            
-            var pathToCreateBatch = Path.Combine(Directory.GetCurrentDirectory(), batchUpload);
-            var filePath = Path.Combine(pathToCreateBatch, _batch.BatchId.ToString());
+            //Create Batch locally
+            CreateBatchOnLocal(_batch.BatchId);
 
-            Directory.CreateDirectory(filePath);
-
-
-            ////Add json file in created batch
-            //var fileName = _batch.BatchId.ToString() + ".txt";
-            //var fileNamePath = Path.Combine(filePath, fileName);
-            //using (StreamWriter file = File.CreateText(fileNamePath))
-            //{
-            //    string data = JsonConvert.SerializeObject(_batch, Newtonsoft.Json.Formatting.None,
-            //            new JsonSerializerSettings()
-            //            {
-            //                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            //            });
-            //    JsonSerializer serializer = new JsonSerializer();
-            //    serializer.Serialize(file, data);
-            //}
+            //Create batch container in azure storage
+            _containerService.CreateContainer(_batch.BatchId.ToString());
 
             return _batch.BatchId;
         }
-        private string GetContentType(string fileName)
-        {
 
-            string contentType;
-            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out contentType);
-            return contentType ?? "application/octet-stream";
-
-        }
         public BatchVMWithBatchDetails GetBatch(Guid batchId)
         {
-
             var batchUpload = _config.GetValue<string>("BatchUpload");
-            //var batchUpload = "BatchUpload";
-            var batchPath = Path.Combine(Directory.GetCurrentDirectory(), batchUpload, batchId.ToString());
-
             List<FilesVM> filesVMs = new List<FilesVM>();
             FilesVM filesVM = new FilesVM();
-            if (!Directory.Exists(batchPath))
+
+            var files = _context.Files.Where(n => n.BatchId == batchId).ToList();
+            if (files != null && files.Count > 0)
             {
-                return null;
-            }
-            DirectoryInfo directoryInfo = new DirectoryInfo(batchPath);
-            FileInfo[] Files = directoryInfo.GetFiles();
-            if (Files != null && Files.Length > 0)
-            {
-                
-                foreach (FileInfo i in Files)
+
+                foreach (var file in files)
                 {
                     filesVM = new FilesVM()
                     {
-                        FileName = i.Name,
-                        FileSize = i.Length,
-                        MimeType = GetContentType(i.Name),
-                        Hash = ""
+                        FileName = file.FileName,
+                        FileSize = file.FileSize,
+                        MimeType = file.MimeType,
+                        Hash = file.Hash
                     };
                     filesVMs.Add(filesVM);
                 }
             }
 
+
             var _batch = _context.Batch.Where(n => n.BatchId == batchId).Select(batch => new BatchVMWithBatchDetails()
             {
                 BatchId = batchId,
-                Status = "Incomplete",
+                Status = batch.Status,
                 BusinessUnit = batch.BusinessUnit,
                 BatchPublisherDate = batch.BatchPublishedDate,
                 ExpiryDate = batch.ExpiryDate,
@@ -160,8 +137,70 @@ namespace batch_webapi.Data.Services
 
             }).FirstOrDefault();
 
-            
+
             return _batch;
+        }
+
+        public async Task AddFileToBatch(Guid batchId, string filename, long X_Content_Size,
+            string X_MIME_Type = null)
+        {
+            var batchUpload = _config.GetValue<string>("BatchUpload");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), batchUpload, filename);
+
+            X_MIME_Type = (X_MIME_Type == null) ? GetContentType(filename) : X_MIME_Type;
+
+            //Add file to azure storage container
+            await _containerService.AddFile(filename, filePath, batchId.ToString(), X_MIME_Type);
+
+            //Save file details in database
+            var fileinfo = _context.Files.Where(f => f.BatchId == batchId && f.FileName == filename).FirstOrDefault();
+            if (fileinfo == null)
+            {
+                Files file = new Files()
+                {
+                    BatchId = batchId,
+                    FileName = filename,
+                    FileSize = X_Content_Size,
+                    MimeType = X_MIME_Type
+
+                };
+                _context.Files.Add(file);
+                _context.SaveChanges();
+            }
+
+            //Update status of batch as Complete
+            Batch batch = _context.Batch.Where(b => b.BatchId == batchId).FirstOrDefault();
+            batch.Status = "Complete";
+            _context.SaveChanges();
+
+        }
+
+        public bool CheckIfContainerExist(string containername)
+        {
+            return _containerService.CheckIfContainerExist(containername);
+        }
+
+        public bool CheckIfFileExist(string filename)
+        {
+            var batchUpload = _config.GetValue<string>("BatchUpload");
+            return File.Exists(Path.Combine(batchUpload, filename));
+
+        }
+        private void CreateBatchOnLocal(Guid batchId)
+        {
+            var batchUpload = _config.GetValue<string>("BatchUpload");
+            var pathToCreateBatch = Path.Combine(Directory.GetCurrentDirectory(), batchUpload);
+            var filePath = Path.Combine(pathToCreateBatch, batchId.ToString());
+
+            Directory.CreateDirectory(filePath);
+        }
+        private string GetContentType(string fileName)
+        {
+
+            string contentType;
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out contentType);
+            return contentType ?? "application/octet-stream";
+
         }
     }
 }

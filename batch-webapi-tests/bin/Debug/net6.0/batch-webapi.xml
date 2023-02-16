@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>batch-webapi</name>
+    </assembly>
+    <members>
+        <member name="T:batch_webapi.Controllers.BatchController">
+            <summary>
+            Batch Controller which include Get and Post batch endpoints
+            </summary>
+        </member>
+        <member name="M:batch_webapi.Controllers.BatchController.CreateBatch(batch_webapi.Data.ViewModels.BatchVM)">
+            <summary>
+            Create a new batch to upload files info
+            </summary>
+            <param></param>
+            <returns>Json - batchId</returns>
+            <exception cref="T:batch_webapi.Exceptions.HttpStatusCodeException"></exception>
+        </member>
+        <member name="M:batch_webapi.Controllers.BatchController.GetBatchByBatchId(System.Guid)">
+            <summary>
+            Get details of the batch including links to all the files in the batch
+            </summary>
+            <remarks>This get will include full details of the batch, for example it's status, the file in the batch</remarks>
+            <param name="batchId">A Batch ID</param>        
+            <returns>Batch details Json</returns>
+            <exception cref="T:batch_webapi.Exceptions.HttpStatusCodeException"></exception>
+        </member>
+        <member name="M:batch_webapi.Controllers.BatchController.AddFileToBatch(System.Guid,System.String,System.Int64,System.String)">
+             <summary>
+             Add a file to the batch
+             </summary>
+             <remarks>Creates a file in the bacth. To upload the content of the file,one or more uploadBlockOfFile requests will need to be made followed by a 'putBlocksInFile' request to complete the file.</remarks>
+             <param name="batchId">A Batch ID</param>
+             <param name="filename">Filename for the new file. Must be unique in the batch but can be the same as another file in another batch). Filenames don't include a path.</param>
+            <param name="X_MIME_Type">Optional. The MIME content type of the file. The default type is application/octet-stream</param>
+            <param name="X_Content_Size">The final size of the file in bytes</param>
+             <returns></returns>
+             <exception cref="T:batch_webapi.Exceptions.HttpStatusCodeException"></exception>
+        </member>
+        <member name="T:batch_webapi.Data.Services.BatchService">
+            <summary>
+            Batch Service class which have post and get batch methods
+            </summary>
+        </member>
+        <member name="T:batchwebapi.Migrations.AlterBatchtableIdcolumnadded">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.AlterBatchtableIdcolumnadded.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.AlterBatchtableIdcolumnadded.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.AlterBatchtableIdcolumnadded.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:batchwebapi.Migrations.removeaclidkey">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.removeaclidkey.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.removeaclidkey.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.removeaclidkey.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:batchwebapi.Migrations.Filesclassadded">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.Filesclassadded.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.Filesclassadded.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.Filesclassadded.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:batchwebapi.Migrations.statusadded">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.statusadded.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.statusadded.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.statusadded.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:batchwebapi.Migrations.AclNameadded">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.AclNameadded.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.AclNameadded.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:batchwebapi.Migrations.AclNameadded.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

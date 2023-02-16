@@ -1,0 +1,33 @@
+02/16/2023 09:06:13 +05:30[Error] - Message: File not exists
+02/16/2023 09:07:03 +05:30[Error] - Message: Batch Id not exists
+02/16/2023 11:04:40 +05:30[Error] - Message: The file 'D:\Projects\UKHO\batch-webapi\batch-webapi\BatchUpload\azureassesment.pdf' already exists.
+System.IO.IOException: The file 'D:\Projects\UKHO\batch-webapi\batch-webapi\BatchUpload\azureassesment.pdf' already exists.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.FileStream..ctor(String path, FileMode mode)
+   at batch_webapi.Data.Services.ContainerService.AddFile(String fileName, String containerName, String contentType) in D:\Projects\UKHO\batch-webapi\batch-webapi\Data\Services\ContainerService.cs:line 24
+   at batch_webapi.Data.Services.BatchService.AddFileToBatch(Guid batchId, String filename, Int64 X_Content_Size, String X_MIME_Type) in D:\Projects\UKHO\batch-webapi\batch-webapi\Data\Services\BatchService.cs:line 183
+   at batch_webapi.Controllers.BatchController.AddFileToBatch(Guid batchId, String filename, Int64 X_Content_Size, String X_MIME_Type) in D:\Projects\UKHO\batch-webapi\batch-webapi\Controllers\BatchController.cs:line 139
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\UKHO\batch-webapi\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 30
+02/16/2023 12:46:22 +05:30[Error] - Message: File not exists
+02/16/2023 12:47:10 +05:30[Error] - Message: File not exists
+02/16/2023 13:47:49 +05:30[Error] - Message: Batch Id not exists
+02/16/2023 18:18:45 +05:30[Information] - Message: CreateBatch - ["\u0027Business Unit\u0027 must not be empty."]
+02/16/2023 18:18:46 +05:30[Error] - Message: ["\u0027Business Unit\u0027 must not be empty."]
+02/16/2023 18:19:55 +05:30[Information] - Message: Batch details not found using provided batchId: 59dbe3dd-4f09-4cb2-97bd-8a3bc5fb8184
+02/16/2023 18:19:55 +05:30[Error] - Message: Wrong Batch Id, No data found!
+02/16/2023 18:20:41 +05:30[Error] - Message: Batch Id not exists
+02/16/2023 18:21:10 +05:30[Error] - Message: File not exists

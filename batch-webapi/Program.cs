@@ -13,6 +13,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FluentValidation.AspNetCore;
 using System.Reflection;
+using Azure.Storage.Blobs;
+using System.IO;
+using Swashbuckle.Swagger;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,14 +51,33 @@ builder.Services.AddControllers()
     c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 #pragma warning restore CS0618 // Type or member is obsolete
 
-
+builder.Services.AddScoped<IContainerService, ContainerService>();
 builder.Services.AddTransient<BatchService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c=>
+{
+    c.SwaggerDoc("v1",
+        new OpenApiInfo
+        {
+            Title = "Swagger API",
+            Version = "v1"
+        }
+     );
+    
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(System.AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+}
+);
 
 builder.Services.AddTransient<CustomExceptionMiddleware>();
+
+builder.Services.AddSingleton(u => new BlobServiceClient(
+    builder.Configuration.GetValue<string>("StorageConnections")
+    ));
 
 var app = builder.Build();
 
@@ -62,8 +85,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(c=>
+    { 
+    c.SerializeAsV2 = true;
+    });
+    app.UseSwaggerUI(c=>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    }
+    );
 }
 
 app.UseHttpsRedirection();

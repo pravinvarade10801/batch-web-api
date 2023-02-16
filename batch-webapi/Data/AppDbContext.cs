@@ -19,5 +19,6 @@ namespace batch_webapi.Data
         public DbSet<ReadUsers> ReadUsers { get; set; }
         public DbSet<ReadGroups> ReadGroups { get; set; }
         public DbSet<Log> Logs { get; set; }
+        public DbSet<Files> Files { get; set; }
     }
 }

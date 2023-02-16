@@ -23,6 +23,7 @@ namespace batch_webapi_tests
         AppDbContext context;
         BatchService batchService;
         IConfiguration _config;
+        IContainerService containerService;
 
         [OneTimeSetUp]
         public void Setup()
@@ -30,9 +31,9 @@ namespace batch_webapi_tests
             context = new AppDbContext(dbContextOptions);
             context.Database.EnsureCreated();
             _config = A.Fake<IConfiguration>();
-
-            SeedDatabase();
-            batchService = new BatchService(context, _config);
+            containerService= A.Fake<IContainerService>();
+                             
+            batchService = new BatchService(context, _config,containerService);
         }
        
 
@@ -90,8 +91,7 @@ namespace batch_webapi_tests
 
             Assert.That(result, Is.Null);
         }
-
-
+      
 
 
         [OneTimeTearDown]
@@ -99,26 +99,6 @@ namespace batch_webapi_tests
         {
             context.Database.EnsureDeleted();
         }
-
-        private void SeedDatabase()
-        {
-
-            var Attributes = new Attributes()
-            {
-                Key = "key",
-                Value = "value"
-            };
-            context.Attributes.AddRange(Attributes);
-
-            var batch = new Batch()
-            {
-                BusinessUnit = "UKHO",
-                ExpiryDate = DateTime.Now.AddDays(10),
-                BatchPublishedDate = DateTime.Now.AddDays(-10),
-                AttributesId = 1
-            };
-            context.Batch.AddRange(batch);
-            context.SaveChanges();
-        }
+        
     }
 }

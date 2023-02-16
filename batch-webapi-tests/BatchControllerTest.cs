@@ -22,6 +22,7 @@ using Azure;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
 
 namespace batch_webapi_tests
 {
@@ -49,7 +50,8 @@ namespace batch_webapi_tests
         {
             IConfiguration _config = A.Fake<IConfiguration>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config);
+            IContainerService _containerService = A.Fake<IContainerService>();
+            BatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             IActionResult actionResult = _batchController.CreateBatch(AssignBatch());
@@ -62,8 +64,9 @@ namespace batch_webapi_tests
         public void HTTPPOST_CreateBatch_ReturnsBadRequest_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config);
+            BatchService _batchService = new BatchService(_context, _config,_containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var newBatch = new BatchVM()
@@ -102,8 +105,9 @@ namespace batch_webapi_tests
         public void HTTPGET_GetBatchByBatchId_ReturnsBadRequest_HttpStatusCodeException_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config);
+            BatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
@@ -114,8 +118,9 @@ namespace batch_webapi_tests
         public void HTTPGET_GetBatchByBatchId_ReturnsNotFound_HttpStatusCodeException_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config);
+            BatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
@@ -127,8 +132,9 @@ namespace batch_webapi_tests
         public void HTTPGET_GetBatchByBatchId_ReturnsOk_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config);
+            BatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             Guid batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
@@ -142,6 +148,42 @@ namespace batch_webapi_tests
             Assert.That(batchDeatails.BatchId, Is.EqualTo(batchId));
 
         }
+
+        [Test, Order(6)]
+        public void HTTPPOST_AddFileToBatch_ReturnsCreatedResult_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            IContainerService _containerService = A.Fake<IContainerService>();
+            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
+            
+            Task<IActionResult> actionResult = _batchController.AddFileToBatch(batchId,"photo.jpg",233,null);
+
+            Assert.That(actionResult, Is.TypeOf<Task<CreatedResult>>());
+
+        }
+
+        [Test, Order(7)]
+        public void HTTPPOST_AddFileToBatch_ReturnsBadRequestContainerNotExist_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
+
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.AddFileToBatch(batchId, "photo.jpg", 2323, null))
+                .StatusCode.Equals(HttpStatusCode.BadRequest);
+                
+
+        }
+
 
         [OneTimeTearDown]
         public void CleanUp()
@@ -178,32 +220,7 @@ namespace batch_webapi_tests
         }
         private void SeedDatabase()
         {
-
-            var Attributes = new Attributes()
-            {
-                Key = "key",
-                Value = "value"
-            };
-            _context.Attributes.AddRange(Attributes);
-
-            var acl = new ACL()
-            {
-                AclId = 1
-            };
-            _context.ACL.AddRange(acl);
-            var readuser = new ReadUsers()
-            {
-                UserName = "user",
-                AclId = 1
-            };
-            _context.ReadUsers.Add(readuser);
-
-            var readgroup = new ReadGroups()
-            {
-                GroupName = "group",
-                AclId = 1
-            };
-            _context.AddRange(readgroup);
+                       
 
             var batch = new Batch()
             {
@@ -211,7 +228,37 @@ namespace batch_webapi_tests
                 BusinessUnit = "UKHO",
                 ExpiryDate = DateTime.Now.AddDays(10),
                 BatchPublishedDate = DateTime.Now.AddDays(-10),
-                AttributesId = 1
+                AttributesId = 1,
+                  ACL = new ACL
+                  {
+                      ReadUsers = new List<ReadUsers>
+                    {
+                        new ReadUsers { 
+                       UserName= "user1",
+                        },
+                        new ReadUsers{ 
+                        UserName= "user2",
+                        }
+
+                    },
+                      ReadGroups = new List<ReadGroups>
+                    {
+                        new ReadGroups {
+                       GroupName= "g1",
+                        },
+                        new ReadGroups{
+                        GroupName= "g2",
+                        }
+
+                    },
+                  },
+
+                Attributes = new Attributes()
+                {
+                    Key = "Code",
+                    Value = "ABC"
+                }                
+
             };
             _context.Batch.AddRange(batch);
             _context.SaveChanges();

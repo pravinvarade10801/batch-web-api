@@ -10,6 +10,7 @@ namespace batch_webapi.Data.Models
     public class ACL
     {        
         public int AclId { get; set; }
+        public string AclName { get; set; }
         public List<ReadUsers> ReadUsers { get; set; }
         public List<ReadGroups> ReadGroups { get; set; }
         public Batch Batch { get; set; }
