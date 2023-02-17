@@ -32,7 +32,7 @@ namespace batch_webapi.Data.Services
             _config = config;
             _containerService = containerService;
         }
-
+                
         public Guid CreateBatch(BatchVM batch, Guid batchId)
         {            
             var _batch = new Batch()

@@ -37,11 +37,26 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 //   .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
 //   .CreateLogger();
 
+builder.Services.AddScoped<IKeyVault, KeyVault>();
+var keyVaultService = builder.Services.BuildServiceProvider().CreateScope().ServiceProvider.GetRequiredService<IKeyVault>();
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//           options.UseSqlServer(
+//               builder.Configuration.GetConnectionString("DefaultConnection")
+//               ));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
            options.UseSqlServer(
-               builder.Configuration.GetConnectionString("DefaultConnection")
+               keyVaultService.GetDatabaseConnectionStringSecret()
                ));
+//builder.Services.AddSingleton(u => new BlobServiceClient(
+//    builder.Configuration.GetValue<string>("StorageConnections")
+//    ));
 
+
+builder.Services.AddSingleton(u => new BlobServiceClient(
+    keyVaultService.GetStorageConnectionStringSecret()
+    ));
 
 // Add services to the container.
 
@@ -56,7 +71,7 @@ builder.Services.AddTransient<BatchService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c=>
+builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1",
         new OpenApiInfo
@@ -65,7 +80,7 @@ builder.Services.AddSwaggerGen(c=>
             Version = "v1"
         }
      );
-    
+
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(System.AppContext.BaseDirectory, xmlFile);
@@ -75,21 +90,18 @@ builder.Services.AddSwaggerGen(c=>
 
 builder.Services.AddTransient<CustomExceptionMiddleware>();
 
-builder.Services.AddSingleton(u => new BlobServiceClient(
-    builder.Configuration.GetValue<string>("StorageConnections")
-    ));
-
 var app = builder.Build();
+
 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(c=>
-    { 
-    c.SerializeAsV2 = true;
+    app.UseSwagger(c =>
+    {
+        c.SerializeAsV2 = true;
     });
-    app.UseSwaggerUI(c=>
+    app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
     }

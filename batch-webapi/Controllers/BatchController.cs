@@ -26,11 +26,12 @@ namespace batch_webapi.Controllers
     {
         public BatchService _batchService;
         private readonly ILogger<BatchController> _logger;
+        //private readonly IKeyVault _keyVault;
                
         public BatchController(BatchService batchService, ILogger<BatchController> logger)
         {
             _batchService = batchService;
-            _logger = logger;            
+            _logger = logger;           
         }
 
         /// <summary>
@@ -142,6 +143,13 @@ namespace batch_webapi.Controllers
 
         }
 
+        //[HttpGet("getsecret")]
+        //public IActionResult GetSecret()
+        //{
+        //    string secret = _keyVault.GetStorageConnectionStringSecret();
+        //    string secret2 = _keyVault.GetDatabaseConnectionStringSecret();
+        //    return Ok(secret);
+        //}
     }
                
 }
