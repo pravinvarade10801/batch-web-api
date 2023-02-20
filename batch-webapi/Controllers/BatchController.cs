@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -24,11 +25,10 @@ namespace batch_webapi.Controllers
     [ApiController]
     public class BatchController : ControllerBase
     {
-        public BatchService _batchService;
-        private readonly ILogger<BatchController> _logger;
-        //private readonly IKeyVault _keyVault;
+        private readonly IBatchService _batchService;
+        private readonly ILogger<BatchController> _logger;        
                
-        public BatchController(BatchService batchService, ILogger<BatchController> logger)
+        public BatchController(IBatchService batchService, ILogger<BatchController> logger)
         {
             _batchService = batchService;
             _logger = logger;           
@@ -52,9 +52,14 @@ namespace batch_webapi.Controllers
                 var errorList = ModelState.Values.SelectMany(m => m.Errors)
                                  .Select(e => e.ErrorMessage)
                                  .ToList();
-                var json = JsonSerializer.Serialize(errorList);
-                _logger.LogInformation(nameof(CreateBatch) + " - " + json);
-                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, json);
+                StringBuilder sb = new StringBuilder();
+                foreach (var error in errorList)
+                {
+                    sb.Append(error);
+                }
+               
+                _logger.LogInformation(nameof(CreateBatch) + " - " + sb.ToString());
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, sb.ToString());
 
             }
             var batchId = _batchService.CreateBatch(batch,Guid.NewGuid()).ToString();
@@ -142,14 +147,7 @@ namespace batch_webapi.Controllers
             return Created(nameof(AddFileToBatch),null);
 
         }
-
-        //[HttpGet("getsecret")]
-        //public IActionResult GetSecret()
-        //{
-        //    string secret = _keyVault.GetStorageConnectionStringSecret();
-        //    string secret2 = _keyVault.GetDatabaseConnectionStringSecret();
-        //    return Ok(secret);
-        //}
+        
     }
                
 }

@@ -51,7 +51,7 @@ namespace batch_webapi_tests
             IConfiguration _config = A.Fake<IConfiguration>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
             IContainerService _containerService = A.Fake<IContainerService>();
-            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             IActionResult actionResult = _batchController.CreateBatch(AssignBatch());
@@ -66,7 +66,7 @@ namespace batch_webapi_tests
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config,_containerService);
+            IBatchService _batchService = new BatchService(_context, _config,_containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var newBatch = new BatchVM()
@@ -107,7 +107,7 @@ namespace batch_webapi_tests
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
@@ -120,7 +120,7 @@ namespace batch_webapi_tests
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
@@ -134,7 +134,7 @@ namespace batch_webapi_tests
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             Guid batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
@@ -155,7 +155,7 @@ namespace batch_webapi_tests
             IConfiguration _config = A.Fake<IConfiguration>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
             IContainerService _containerService = A.Fake<IContainerService>();
-            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
@@ -172,7 +172,7 @@ namespace batch_webapi_tests
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            BatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
 

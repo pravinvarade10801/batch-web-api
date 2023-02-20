@@ -83,7 +83,7 @@ builder.Services.AddControllers()
 #pragma warning restore CS0618 // Type or member is obsolete
 
 builder.Services.AddScoped<IContainerService, ContainerService>();
-builder.Services.AddTransient<BatchService>();
+builder.Services.AddScoped<IBatchService, BatchService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -20,7 +20,7 @@ namespace batch_webapi.Data.Services
     /// <summary>
     /// Batch Service class which have post and get batch methods
     /// </summary>
-    public class BatchService
+    public class BatchService:IBatchService
     {
         private AppDbContext _context;
         private readonly IConfiguration _config;
