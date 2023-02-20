@@ -15,18 +15,17 @@ using FluentValidation.AspNetCore;
 using System.Reflection;
 using Azure.Storage.Blobs;
 using System.IO;
-using Swashbuckle.Swagger;
+
 using Microsoft.OpenApi.Models;
+using System.Linq;
+using Serilog.Sinks.MSSqlServer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = new ConfigurationBuilder()
                    .AddJsonFile("appsettings.json")
                    .Build();
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(configuration)
-    .CreateLogger();
-builder.Host.UseSerilog();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -39,6 +38,23 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddScoped<IKeyVault, KeyVault>();
 var keyVaultService = builder.Services.BuildServiceProvider().CreateScope().ServiceProvider.GetRequiredService<IKeyVault>();
+
+//Log.Logger = new LoggerConfiguration()
+//    .ReadFrom.Configuration(configuration)
+//    .CreateLogger();
+
+
+var sinkOptions = new MSSqlServerSinkOptions()
+{
+    TableName = "Logs",
+    AutoCreateSqlTable = false
+};
+
+Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Information()
+                  .WriteTo.MSSqlServer(keyVaultService.GetDatabaseConnectionStringSecret(), sinkOptions, null, null, Serilog.Events.LogEventLevel.Error)
+                  .CreateLogger();
+builder.Host.UseSerilog();
 
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //           options.UseSqlServer(
@@ -95,18 +111,18 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger(c =>
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    if (!app.Environment.IsDevelopment())
     {
-        c.SerializeAsV2 = true;
-    });
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty;
     }
-    );
 }
+);
+
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

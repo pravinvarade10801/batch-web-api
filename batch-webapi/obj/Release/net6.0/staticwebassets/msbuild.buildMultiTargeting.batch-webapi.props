@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\batch-webapi.props" />
+</Project>

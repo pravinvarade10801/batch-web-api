@@ -32,9 +32,9 @@ namespace batch_webapi.Data.Services
             _config = config;
             _containerService = containerService;
         }
-                
+
         public Guid CreateBatch(BatchVM batch, Guid batchId)
-        {            
+        {
             var _batch = new Batch()
             {
                 BatchId = batchId,
@@ -182,8 +182,11 @@ namespace batch_webapi.Data.Services
 
         public bool CheckIfFileExist(string filename)
         {
-            var batchUpload = _config.GetValue<string>("BatchUpload");
-            return File.Exists(Path.Combine(batchUpload, filename));
+            var blobContainer = _config.GetValue<string>("BlobContainer");
+
+            //return File.Exists(Path.Combine(batchUpload, filename));
+            return _containerService.GetFile(filename, blobContainer);
+
 
         }
         private void CreateBatchOnLocal(Guid batchId)

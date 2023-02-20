@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "R1Xcla7NtY64qzP3rI7OpJK648Zwy8wRzad89Do9TEQ=",
+  "Source": "batch-webapi",
+  "BasePath": "_content/batch-webapi",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -1,0 +1,79 @@
+02/20/2023 08:29:34 +05:30[Error] - Message: Illegal characters in path. (Parameter 'path')
+System.ArgumentException: Illegal characters in path. (Parameter 'path')
+   at System.IO.Path.GetFullPath(String path)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at Azure.Storage.Blobs.BlobClient.UploadAsync(String path, BlobHttpHeaders httpHeaders, IDictionary`2 metadata, BlobRequestConditions conditions, IProgress`1 progressHandler, Nullable`1 accessTier, StorageTransferOptions transferOptions, CancellationToken cancellationToken)
+   at batch_webapi.Data.Services.ContainerService.AddFile(String fileName, String filePath, String containerName, String contentType) in D:\Projects\UKHO\batch-webapi\batch-webapi\Data\Services\ContainerService.cs:line 36
+   at batch_webapi.Data.Services.BatchService.AddFileToBatch(Guid batchId, String filename, Int64 X_Content_Size, String X_MIME_Type) in D:\Projects\UKHO\batch-webapi\batch-webapi\Data\Services\BatchService.cs:line 153
+   at batch_webapi.Controllers.BatchController.AddFileToBatch(Guid batchId, String filename, Int64 X_Content_Size, String X_MIME_Type) in D:\Projects\UKHO\batch-webapi\batch-webapi\Controllers\BatchController.cs:line 140
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\UKHO\batch-webapi\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 30
+02/20/2023 09:09:54 +05:30[Error] - Message: Service request failed.
+Status: 400 (The specifed resource name contains invalid characters.)
+ErrorCode: InvalidResourceName
+
+Headers:
+Transfer-Encoding: chunked
+Server: Windows-Azure-Blob/1.0,Microsoft-HTTPAPI/2.0
+x-ms-request-id: 6f3dbea4-b01e-005b-69dc-44d107000000
+x-ms-client-request-id: 595a7ad6-e0ca-44b9-a407-6ae821d175a2
+x-ms-version: 2021-10-04
+x-ms-error-code: InvalidResourceName
+Date: Mon, 20 Feb 2023 03:39:34 GMT
+
+Azure.RequestFailedException: Service request failed.
+Status: 400 (The specifed resource name contains invalid characters.)
+ErrorCode: InvalidResourceName
+
+Headers:
+Transfer-Encoding: chunked
+Server: Windows-Azure-Blob/1.0,Microsoft-HTTPAPI/2.0
+x-ms-request-id: 6f3dbea4-b01e-005b-69dc-44d107000000
+x-ms-client-request-id: 595a7ad6-e0ca-44b9-a407-6ae821d175a2
+x-ms-version: 2021-10-04
+x-ms-error-code: InvalidResourceName
+Date: Mon, 20 Feb 2023 03:39:34 GMT
+
+   at Azure.Storage.Blobs.BlobRestClient.GetProperties(String snapshot, String versionId, Nullable`1 timeout, String leaseId, String encryptionKey, String encryptionKeySha256, Nullable`1 encryptionAlgorithm, Nullable`1 ifModifiedSince, Nullable`1 ifUnmodifiedSince, String ifMatch, String ifNoneMatch, String ifTags, CancellationToken cancellationToken)
+   at Azure.Storage.Blobs.Specialized.BlobBaseClient.GetPropertiesInternal(BlobRequestConditions conditions, Boolean async, CancellationToken cancellationToken, String operationName)
+   at Azure.Storage.Blobs.Specialized.BlobBaseClient.ExistsInternal(Boolean async, CancellationToken cancellationToken)
+   at Azure.Storage.Blobs.Specialized.BlobBaseClient.Exists(CancellationToken cancellationToken)
+   at batch_webapi.Data.Services.ContainerService.GetFile(String fileName, String containerName) in D:\Projects\UKHO\batch-webapi\batch-webapi\Data\Services\ContainerService.cs:line 57
+   at batch_webapi.Data.Services.BatchService.CheckIfFileExist(String filename) in D:\Projects\UKHO\batch-webapi\batch-webapi\Data\Services\BatchService.cs:line 186
+   at batch_webapi.Controllers.BatchController.AddFileToBatch(Guid batchId, String filename, Int64 X_Content_Size, String X_MIME_Type) in D:\Projects\UKHO\batch-webapi\batch-webapi\Controllers\BatchController.cs:line 135
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\UKHO\batch-webapi\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 30
+02/20/2023 09:16:02 +05:30[Error] - Message: Object reference not set to an instance of an object.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at batch_webapi.Data.Services.BatchService.AddFileToBatch(Guid batchId, String filename, Int64 X_Content_Size, String X_MIME_Type) in D:\Projects\UKHO\batch-webapi\batch-webapi\Data\Services\BatchService.cs:line 173
+   at batch_webapi.Controllers.BatchController.AddFileToBatch(Guid batchId, String filename, Int64 X_Content_Size, String X_MIME_Type) in D:\Projects\UKHO\batch-webapi\batch-webapi\Controllers\BatchController.cs:line 140
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at batch_webapi.Exceptions.CustomExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\UKHO\batch-webapi\batch-webapi\Exceptions\CustomExceptionMiddleware.cs:line 30
