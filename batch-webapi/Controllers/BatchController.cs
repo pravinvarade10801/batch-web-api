@@ -120,7 +120,7 @@ namespace batch_webapi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddFileToBatch(Guid batchId, string filename,
+        public IActionResult AddFileToBatch(Guid batchId, string filename,
             [FromHeader(Name= "X_Content_Size")][Required] long X_Content_Size,
             [FromHeader] string X_MIME_Type = null)
         {
@@ -142,7 +142,7 @@ namespace batch_webapi.Controllers
                 throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "File not exists");
             }
             
-            await _batchService.AddFileToBatch(batchId,filename,X_Content_Size,X_MIME_Type);
+            _batchService.AddFileToBatch(batchId,filename,X_Content_Size,X_MIME_Type);
 
             return Created(nameof(AddFileToBatch),null);
 

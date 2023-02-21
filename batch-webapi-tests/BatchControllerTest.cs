@@ -100,21 +100,8 @@ namespace batch_webapi_tests
 
         }
 
-
+              
         [Test, Order(3)]
-        public void HTTPGET_GetBatchByBatchId_ReturnsBadRequest_HttpStatusCodeException_Test()
-        {
-            IConfiguration _config = A.Fake<IConfiguration>();
-            IContainerService _containerService = A.Fake<IContainerService>();
-            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
-            BatchController _batchController = new BatchController(_batchService, _logger);
-
-            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
-            
-            Assert.Throws<HttpStatusCodeException>(() => _batchController.GetBatchByBatchId(batchId)).StatusCode.Equals(HttpStatusCode.NotFound);
-        }
-        [Test, Order(4)]
         public void HTTPGET_GetBatchByBatchId_ReturnsNotFound_HttpStatusCodeException_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
@@ -123,12 +110,14 @@ namespace batch_webapi_tests
             IBatchService _batchService = new BatchService(_context, _config, _containerService);
             BatchController _batchController = new BatchController(_batchService, _logger);
 
-            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
+            //IActionResult response = _batchController.GetBatchByBatchId(batchId);
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.GetBatchByBatchId(batchId))
+                .StatusCode.Equals(HttpStatusCode.NotFound);
 
-            Assert.Throws<HttpStatusCodeException>(() => _batchController.GetBatchByBatchId(batchId)).StatusCode.Equals(HttpStatusCode.BadRequest);
         }
 
-        [Test, Order(5)]
+        [Test, Order(4)]
         public void HTTPGET_GetBatchByBatchId_ReturnsOk_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
@@ -148,25 +137,9 @@ namespace batch_webapi_tests
             Assert.That(batchDeatails.BatchId, Is.EqualTo(batchId));
 
         }
+             
 
-        [Test, Order(6)]
-        public void HTTPPOST_AddFileToBatch_ReturnsCreatedResult_Test()
-        {
-            IConfiguration _config = A.Fake<IConfiguration>();
-            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IContainerService _containerService = A.Fake<IContainerService>();
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
-            BatchController _batchController = new BatchController(_batchService, _logger);
-
-            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
-            
-            Task<IActionResult> actionResult = _batchController.AddFileToBatch(batchId,"photo.jpg",233,null);
-
-            Assert.That(actionResult, Is.TypeOf<Task<CreatedResult>>());
-
-        }
-
-        [Test, Order(7)]
+        [Test, Order(5)]
         public void HTTPPOST_AddFileToBatch_ReturnsBadRequestContainerNotExist_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
@@ -183,7 +156,39 @@ namespace batch_webapi_tests
                 
 
         }
+        [Test, Order(6)]
+        public void HTTPPOST_AddFileToBatch_ReturnsBadRequestFileNotExist_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            BatchController _batchController = new BatchController(_batchService, _logger);
 
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
+
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.AddFileToBatch(batchId, "test.jpg", 2323, null))
+                .StatusCode.Equals(HttpStatusCode.BadRequest);
+
+
+        }
+        [Test, Order(7)]
+        public void HTTPPOST_AddFileToBatch_ReturnsCreatedResult_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            IContainerService _containerService = A.Fake<IContainerService>();           
+            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
+            
+            var actionResult = _batchController.AddFileToBatch(batchId, "photo.jpg", 233, null);
+
+            Assert.That(actionResult, Is.TypeOf<Task<CreatedResult>>());
+
+        }
 
         [OneTimeTearDown]
         public void CleanUp()
