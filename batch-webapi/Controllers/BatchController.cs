@@ -83,9 +83,8 @@ namespace batch_webapi.Controllers
         public IActionResult GetBatchByBatchId(Guid batchId)
         {
             //throw new Exception("error from middleware");
-            Guid guidOutput;
-            bool isValid = Guid.TryParse(batchId.ToString(), out guidOutput);
-            if (!isValid)
+
+            if (!_batchService.CheckIfValidBatchId(batchId.ToString()))
             {
                 throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "Invalid Batch Id");
             }
@@ -124,10 +123,8 @@ namespace batch_webapi.Controllers
             [FromHeader(Name= "X_Content_Size")][Required] long X_Content_Size,
             [FromHeader] string X_MIME_Type = null)
         {
-
-            Guid guidOutput;
-            bool isValid = Guid.TryParse(batchId.ToString(), out guidOutput);
-            if (!isValid)
+                       
+            if (!_batchService.CheckIfValidBatchId(batchId.ToString()))
             {
                 throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "Invalid Batch Id");
             }

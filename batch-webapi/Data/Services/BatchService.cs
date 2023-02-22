@@ -189,6 +189,12 @@ namespace batch_webapi.Data.Services
 
 
         }
+        public bool CheckIfValidBatchId(string batchId)
+        {
+            Guid guidOutput;
+            bool isValid = Guid.TryParse(batchId.ToString(), out guidOutput);
+            return isValid;
+        }
         private void CreateBatchOnLocal(Guid batchId)
         {
             var batchUpload = _config.GetValue<string>("BatchUpload");

@@ -13,5 +13,6 @@ namespace batch_webapi.Data.Services
 
         public bool CheckIfContainerExist(string containername);
         public bool CheckIfFileExist(string filename);
+        public bool CheckIfValidBatchId(string batchId);
     }
 }

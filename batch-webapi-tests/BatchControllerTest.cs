@@ -32,8 +32,8 @@ namespace batch_webapi_tests
           .UseInMemoryDatabase(databaseName: "BatchDbControllerTest")
           .Options;
 
-        AppDbContext _context;              
-        
+        AppDbContext _context;
+
 
         [OneTimeSetUp]
         public void Setup()
@@ -41,17 +41,15 @@ namespace batch_webapi_tests
             _context = new AppDbContext(dbContextOptions);
             _context.Database.EnsureCreated();
 
-            SeedDatabase();          
-            
+            SeedDatabase();
+
         }
 
         [Test, Order(1)]
         public void HTTPPOST_CreateBatch_ReturnsCreatedAtActionResult_Test()
-        {
-            IConfiguration _config = A.Fake<IConfiguration>();
+        {           
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IContainerService _containerService = A.Fake<IContainerService>();
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = A.Fake<IBatchService>();
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             IActionResult actionResult = _batchController.CreateBatch(AssignBatch());
@@ -63,10 +61,8 @@ namespace batch_webapi_tests
         [Test, Order(2)]
         public void HTTPPOST_CreateBatch_ReturnsBadRequest_Test()
         {
-            IConfiguration _config = A.Fake<IConfiguration>();
-            IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IBatchService _batchService = new BatchService(_context, _config,_containerService);
+            IBatchService _batchService = A.Fake<IBatchService>();            
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var newBatch = new BatchVM()
@@ -100,93 +96,163 @@ namespace batch_webapi_tests
 
         }
 
-              
         [Test, Order(3)]
+        public void HTTPGET_GetBatchByBatchId_ReturnsBadRequest_IfInValidBatchId_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            IBatchService _batchService = A.Fake<IBatchService>();
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).Returns(false);
+
+
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.GetBatchByBatchId(batchId))
+                .StatusCode.Equals(HttpStatusCode.BadRequest);
+
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).MustHaveHappenedOnceExactly();
+        }
+        [Test, Order(4)]
         public void HTTPGET_GetBatchByBatchId_ReturnsNotFound_HttpStatusCodeException_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = A.Fake<IBatchService>();
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
-            //IActionResult response = _batchController.GetBatchByBatchId(batchId);
+
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).Returns(true);
+            var result = A.CallTo(() => _batchService.GetBatch(batchId)).Returns(null);
+
             Assert.Throws<HttpStatusCodeException>(() => _batchController.GetBatchByBatchId(batchId))
                 .StatusCode.Equals(HttpStatusCode.NotFound);
 
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _batchService.GetBatch(batchId)).MustHaveHappenedOnceExactly();
+
         }
 
-        [Test, Order(4)]
-        public void HTTPGET_GetBatchByBatchId_ReturnsOk_Test()
+        [Test, Order(5)]
+        public void HTTPGET_GetBatchByBatchId_ReturnsResult_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = A.Fake<IBatchService>();
             BatchController _batchController = new BatchController(_batchService, _logger);
 
-            Guid batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
 
-            IActionResult actionResult = _batchController.GetBatchByBatchId(batchId);
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).Returns(true);
 
-            Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
+            A.CallTo(() => _batchService.GetBatch(batchId)).Returns(new BatchVMWithBatchDetails
+            {
+                BatchId = batchId,
+                BusinessUnit = "UKHO"
+            });
 
-            var batchDeatails = (actionResult as OkObjectResult).Value as BatchVMWithBatchDetails;
-            Assert.That(batchDeatails.BusinessUnit, Is.EqualTo("UKHO"));
-            Assert.That(batchDeatails.BatchId, Is.EqualTo(batchId));
+            var result = _batchController.GetBatchByBatchId(batchId);
+
+            Assert.IsNotNull(result);
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _batchService.GetBatch(batchId)).MustHaveHappenedOnceExactly();
 
         }
-             
 
-        [Test, Order(5)]
+        [Test, Order(6)]
+        public void HTTPPOST_AddFileToBatch_ReturnsBadRequest_IfInValidBatchId_Test()
+        {
+            IConfiguration _config = A.Fake<IConfiguration>();
+            IContainerService _containerService = A.Fake<IContainerService>();
+            ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
+            IBatchService _batchService = A.Fake<IBatchService>();
+            BatchController _batchController = new BatchController(_batchService, _logger);
+
+            var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).Returns(false);
+
+
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.AddFileToBatch(batchId, "photo.jpg", 2323, null))
+                .StatusCode.Equals(HttpStatusCode.BadRequest);
+
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).MustHaveHappenedOnceExactly();
+        }
+        [Test, Order(7)]
         public void HTTPPOST_AddFileToBatch_ReturnsBadRequestContainerNotExist_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = A.Fake<IBatchService>();
             BatchController _batchController = new BatchController(_batchService, _logger);
 
-
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).Returns(true);
+            A.CallTo(() => _batchService.CheckIfContainerExist(batchId.ToString())).Returns(false);
+
 
             Assert.Throws<HttpStatusCodeException>(() => _batchController.AddFileToBatch(batchId, "photo.jpg", 2323, null))
                 .StatusCode.Equals(HttpStatusCode.BadRequest);
-                
+
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _batchService.CheckIfContainerExist(batchId.ToString())).MustHaveHappenedOnceExactly();
 
         }
-        [Test, Order(6)]
+        [Test, Order(8)]
         public void HTTPPOST_AddFileToBatch_ReturnsBadRequestFileNotExist_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
             IContainerService _containerService = A.Fake<IContainerService>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            IBatchService _batchService = A.Fake<IBatchService>();
             BatchController _batchController = new BatchController(_batchService, _logger);
 
-
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89523");
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).Returns(true);
+            A.CallTo(() => _batchService.CheckIfContainerExist(batchId.ToString())).Returns(true);
+            A.CallTo(() => _batchService.CheckIfFileExist("photo.jpg")).Returns(false);
 
-            Assert.Throws<HttpStatusCodeException>(() => _batchController.AddFileToBatch(batchId, "test.jpg", 2323, null))
+
+            Assert.Throws<HttpStatusCodeException>(() => _batchController.AddFileToBatch(batchId, "photo.jpg", 233, null))
                 .StatusCode.Equals(HttpStatusCode.BadRequest);
+
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _batchService.CheckIfContainerExist(batchId.ToString())).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _batchService.CheckIfFileExist("photo.jpg")).MustHaveHappenedOnceExactly();
 
 
         }
-        [Test, Order(7)]
+        [Test, Order(9)]
         public void HTTPPOST_AddFileToBatch_ReturnsCreatedResult_Test()
         {
             IConfiguration _config = A.Fake<IConfiguration>();
             ILogger<BatchController> _logger = A.Fake<ILogger<BatchController>>();
-            IContainerService _containerService = A.Fake<IContainerService>();           
-            IBatchService _batchService = new BatchService(_context, _config, _containerService);
+            IContainerService _containerService = A.Fake<IContainerService>();
+            IBatchService _batchService = A.Fake<IBatchService>();
             BatchController _batchController = new BatchController(_batchService, _logger);
 
             var batchId = new Guid("61EE6631-C7C5-40B3-B8DF-6345A1C89528");
-            
-            var actionResult = _batchController.AddFileToBatch(batchId, "photo.jpg", 233, null);
 
-            Assert.That(actionResult, Is.TypeOf<Task<CreatedResult>>());
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).Returns(true);
+            A.CallTo(() => _batchService.CheckIfContainerExist(batchId.ToString())).Returns(true);
+
+            A.CallTo(() => _batchService.CheckIfFileExist("photo.jpg")).Returns(true);
+
+
+            var result = _batchController.AddFileToBatch(batchId, "photo.jpg", 233, null);
+
+            A.CallTo(() => _batchService.CheckIfValidBatchId(batchId.ToString())).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _batchService.CheckIfContainerExist(batchId.ToString())).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _batchService.CheckIfFileExist("photo.jpg")).MustHaveHappenedOnceExactly();
+
+
+            Assert.That(result, Is.TypeOf<CreatedResult>());
 
         }
 
@@ -225,7 +291,7 @@ namespace batch_webapi_tests
         }
         private void SeedDatabase()
         {
-                       
+
 
             var batch = new Batch()
             {
@@ -234,19 +300,19 @@ namespace batch_webapi_tests
                 ExpiryDate = DateTime.Now.AddDays(10),
                 BatchPublishedDate = DateTime.Now.AddDays(-10),
                 AttributesId = 1,
-                  ACL = new ACL
-                  {
-                      ReadUsers = new List<ReadUsers>
+                ACL = new ACL
+                {
+                    ReadUsers = new List<ReadUsers>
                     {
-                        new ReadUsers { 
+                        new ReadUsers {
                        UserName= "user1",
                         },
-                        new ReadUsers{ 
+                        new ReadUsers{
                         UserName= "user2",
                         }
 
                     },
-                      ReadGroups = new List<ReadGroups>
+                    ReadGroups = new List<ReadGroups>
                     {
                         new ReadGroups {
                        GroupName= "g1",
@@ -256,13 +322,13 @@ namespace batch_webapi_tests
                         }
 
                     },
-                  },
+                },
 
                 Attributes = new Attributes()
                 {
                     Key = "Code",
                     Value = "ABC"
-                }                
+                }
 
             };
             _context.Batch.AddRange(batch);
