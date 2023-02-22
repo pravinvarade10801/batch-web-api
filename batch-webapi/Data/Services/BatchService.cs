@@ -141,7 +141,7 @@ namespace batch_webapi.Data.Services
             return _batch;
         }
 
-        public async Task AddFileToBatch(Guid batchId, string filename, long X_Content_Size,
+        public void AddFileToBatch(Guid batchId, string filename, long X_Content_Size,
             string X_MIME_Type = null)
         {
             var batchUpload = _config.GetValue<string>("BatchUpload");
@@ -150,7 +150,7 @@ namespace batch_webapi.Data.Services
             X_MIME_Type = (X_MIME_Type == null) ? GetContentType(filename) : X_MIME_Type;
 
             //Add file to azure storage container
-            await _containerService.AddFile(filename, filePath, batchId.ToString(), X_MIME_Type);
+             _containerService.AddFile(filename, filePath, batchId.ToString(), X_MIME_Type);
 
             //Save file details in database
             var fileinfo = _context.Files.Where(f => f.BatchId == batchId && f.FileName == filename).FirstOrDefault();
